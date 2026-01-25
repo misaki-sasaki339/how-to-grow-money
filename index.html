@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>お金の育て方</title>
+    <link rel="shortcut icon" href="img/favicon.ico" sizes="32x32" type="image/x-icon">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New&display=swap" rel="stylesheet">
+    <script src="js/script.js" defer></script>
+</head>
+
+<body>
+    <!-- タイトル表示 -->
+    <header>
+        <h1>
+            <span class="header-title-text">おかねの育て方</span>
+            <img class="header-img" src="img/おかねを育てる.svg" alt="">
+        </h1>
+        <p class="sub-title">未来の資産を“見える化”して、安心に変えるツールです</p>
+    </header>
+
+    <main>
+        <!-- 入力エリア -->
+        <div class="input-section">
+            <div class="input-group">
+                <div class="input-label">
+                    <label for="seed">はじめのたね</label>
+                    <small>おかねを育てはじめる元となる金額です</small>
+                </div>
+                <input class="input-seed" type="text" inputmode="numeric" id="seed" placeholder="1,000,000">
+            </div>
+            <div class="rate-period-section">
+                <div class="rate-period-group">
+                    <div class="input-group">
+                        <div class="input-label">
+                            <label for="base-rate">1年で何％育つ？</label>
+                            <small>毎年どれくらい増える想定かを％で入力します</small>
+                        </div>
+                        <div class="input-with-unit">
+                            <input class="input-rate" type="number" id="base-rate" placeholder="5">
+                            <span class="unit">%</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <div class="input-label">
+                            <label for="base-years">最初の育てる期間</label>
+                            <small>何年育てるかを入力してください</small>
+                        </div>
+                        <div class="input-with-unit">
+                            <input class="input-years" type="number" id="base-years" placeholder="30">
+                            <span class="unit">年</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="open-btn" id="open-modal">育てる期間を追加</button>
+
+            <!-- モーダルウィンドウ -->
+            <section id="modal">
+                <div class="modal-content">
+                    <p class="modal-title"><img src="img/手のひら.svg" alt="おかねを育てる">この先もおかねを育てる</p>
+                    <small>最初の期間が終わったあとも、同じようにおかねを育て続けたい場合に設定できます</small>
+                    <div class="modal-body">
+                        <div class="rate-period-section">
+                            <div class="rate-period-group">
+                                <p class="condition-title">追加の育てる期間①</p>
+                                <div class="rate-period-row">
+                                    <div class="rate-period-inputs">
+                                        <div class="input-group">
+                                            <div class="input-label">
+                                                <label>1年で何％育つ？</label>
+                                                <small>毎年どれくらい増える想定かを％で入力します</small>
+                                            </div>
+                                            <div class="input-with-unit">
+                                                <input class="input-rate" type="number" placeholder="5">
+                                                <span class="unit">%</span>
+                                            </div>
+                                        </div>
+                                        <div class="input-group">
+                                            <div class="input-label">
+                                                <label>おかねを育てる期間</label>
+                                                <small>何年育てるかを入力してください</small>
+                                            </div>
+                                            <div class="input-with-unit">
+                                                <input class="input-years" type="number" placeholder="30">
+                                                <span class="unit">年</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="condition-actions">
+                                        <button type="button" class="add-btn">＋</button>
+                                        <button type="button" class="remove-btn">×</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="close-btn" id="close-modal">条件を設定</button>
+                </div>
+            </section>
+            <div id="mask"></div>
+            <button class="calcurate-btn">計算する</button>
+        </div>
+
+        <!-- グラフ表示（chart.js） -->
+        <div class="result-section">
+            <div class="graph-section">
+                <p>グラフエリア</p>
+                <p>！chart.jsで総資産の棒×資産増減の折れ線混合グラフを表示！</p>
+                <!-- chart.js canvasで表示 -->
+            </div>
+
+            <!-- テーブル表示 -->
+            <div class="table-section">
+                <p class="table-desctiption">各年ごとに、資産がどれくらい増えていくかを見てみよう</p>
+                <table>
+                    <tr>
+                        <th>何年目</th>
+                        <th>いまの資産(円)</th>
+                        <th>ことし育ったおかね(円)</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>101,000</td>
+                        <td>1,000</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>202,000</td>
+                        <td>2,000</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        &copy; 2026 そらのたねコード
+    </footer>
+</body>
+
+</html>

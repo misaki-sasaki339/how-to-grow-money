@@ -1,0 +1,300 @@
+/* 全体設定 */
+body {
+    font-family: "Zen Kaku Gothic New", sans-serif;
+    margin: 0;
+    color: #5a3f2b;
+    background-color: #faf7f3;
+}
+
+main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 16px;
+}
+
+header,
+footer {
+    display: flex;
+    justify-content: center;
+}
+
+header {
+    flex-direction: column;
+    align-items: center;
+}
+
+footer {
+    margin-top: 1.2rem;
+}
+
+::placeholder {
+    opacity: 0.3;
+}
+
+.header-title-text {
+    display: inline-block;
+    transform: translateY(-0.4rem);
+    margin-right: 0.2rem;
+}
+
+.header-img {
+    width: 6rem;
+    height: 6rem;
+    opacity: 0.8;
+}
+
+/* =================================== */
+
+/* 入力欄の設定 */
+.input-section {
+    display: flex;
+    flex-direction: column;
+    max-width: 420px;
+    margin: 0 auto;
+}
+
+.rate-period-section {
+    display: flex;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.25rem;
+}
+
+.rate-period-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.rate-period-group .input-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.25rem;
+}
+
+.input-label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.input-group input {
+    height: 2rem;
+    border: 1px solid #4a3323;
+    border-radius: 3px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    text-align: right;
+    border: 1px solid #d5c9bc;
+}
+
+.input-seed {
+    width: 100%;
+}
+
+.input-rate,
+.input-years {
+    width: 80px;
+    padding-right: 2.2rem;
+}
+
+.input-with-unit {
+    position: relative;
+    display: inline-block;
+}
+
+.input-with-unit .unit {
+    position: absolute;
+    right: 0.6rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #7a5c3e;
+    font-size: 0.9rem;
+    pointer-events: none;
+}
+
+.calcurate-btn {
+    font-weight: bold;
+    background-color: #5a3f2b;
+    border: none;
+    color: #fff;
+    border-radius: 3px;
+    text-align: center;
+    padding: 0.6rem 1.4rem;
+}
+
+/* =================================== */
+
+/* モーダルウィンドウの設定 */
+.open-btn,
+.close-btn {
+    color: #fff;
+    background-color: #6b8f71;
+    border: none;
+    border-radius: .2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.open-btn {
+    align-self: flex-end;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.85rem;
+    margin-bottom: 2rem;
+}
+
+.close-btn {
+    align-self: flex-end;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.85rem;
+    margin: 1.25rem 0;
+}
+
+#mask {
+    background-color: rgba(0, 0, 0, 0.6);
+    position: fixed;
+    inset: 0;
+    z-index: 9998;
+    visibility: hidden;
+}
+
+#modal {
+    background-color: #faf7f3;
+    width: 50%;
+    max-width: 32rem;
+    height: 70vh;
+    padding: 3rem;
+    border-radius: .5rem;
+
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+
+    display: flex;
+    flex-direction: column;
+}
+
+#modal .rate-period-group  {
+    display: flex;
+    background-color: #fff;
+    margin-bottom: 1rem;
+    border-radius: 0.3rem;
+    box-sizing: border-box;
+    padding: 0.75rem 1.25rem;
+    border: 1px solid #e1e6e2;
+}
+
+#modal .rate-period-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.rate-period-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.modal-body {
+    height: 55vh;
+    overflow-y: auto;
+}
+
+p.modal-title {
+    margin: 0 0 0.4rem;
+    font-size: 1.2rem;
+}
+
+#modal img {
+    height: 1.4rem;
+    margin-right: 0.3rem;
+}
+
+#modal small {
+    margin-bottom: 1.25rem;
+}
+
+.condition-title {
+    display: inline-block;
+    font-weight: 600;
+    font-size: 0.90rem;
+    padding: 0.3rem 0.75rem;
+    margin: 0.5rem 0;
+    background: #eef4ef;
+    color: #4b6b52;
+    border-radius: 0.3rem;
+}
+
+.rate-period-inputs {
+    flex: 1;
+}
+
+.condition-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.add-btn,
+.remove-btn {
+    appearance: none;
+    border: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    color: #fff;
+    background-color: #5a3f2b;
+    font-size: 0.85rem;
+}
+
+/* スピンボタンの削除 */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+/* =================================== */
+
+/* 集計グラフの表示 */
+.result-section {
+    display: none;
+}
+
+.result-section.is-visible {
+    display: block;
+}
+
+table {
+    border-collapse: collapse;
+    border: 1px solid #4a3323;
+    width: 100%;
+}
+
+th,
+td {
+    border: 1px solid #4a3323;
+    text-align: right;
+}
