@@ -16,6 +16,7 @@ seedInput.addEventListener("input", (e) => {
     e.target.value = number.toLocaleString();
 });
 
+let growthChart = null;
 
 //======================
 // DOMの取得
@@ -72,13 +73,13 @@ const MAX_STEPS = 6;
 // 入力欄を追加した際に番号を+1
 function updateConditionTitles(container) {
     const groups = container.querySelectorAll(".rate-period-group");
-    const stepNumbers = ["①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨", "⑩"];
+    const stepNumbers = ["①", "②", "③", "④", "⑤", "⑥"];
 
     groups.forEach((group, index) => {
         const title = group.querySelector(".condition-title");
         if (title) {
         const mark = stepNumbers[index];
-        title.textContent = `育てるステップ${mark}`;
+        title.textContent = `追加の育てる期間${mark}`;
         }
     });
 }
@@ -135,7 +136,7 @@ const resultSection = document.querySelector('.result-section');
 
 calculateBtn.addEventListener("click", () => {
     const seed = Number(seedInput.value.replace(/,/g, ""));
-    
+
     // =====================================
     // 最初の育てる期間（モーダル外）
     // =====================================
@@ -179,15 +180,13 @@ calculateBtn.addEventListener("click", () => {
         });
     })
 
-    // console.log(conditions);
-
     // =====================================
     // 複利計算ロジック
     // =====================================
     let currentAmount = seed;
     let yearCount = 0;
     const yearlyResults = [];
-    
+
     conditions.forEach(condition => {
         for (let i = 0; i < condition.years; i++) {
             const before = currentAmount;
@@ -206,5 +205,104 @@ calculateBtn.addEventListener("click", () => {
 
     resultSection.classList.add("is-visible");
     resultSection.scrollIntoView({ behavior: "smooth" });
+
+    // =====================================
+    // 資産の合計・増減率を描画
+    // =====================================
+    const labels = yearlyResults.map(r => r.year);
+    const seeds = yearlyResults.map(() => seed);
+
+    // 去年までの累計増加分
+    const pastGains = yearlyResults.map(r => {
+        return r.total - seed - r.increase
+    });
+
+    // 今年の増加分
+    const yealyGains = yearlyResults.map(r => r.increase);
+
+    const data = {
+        labels,
+        datasets: [{
+            label: "はじまりのたね",
+            data: seeds,
+            backgroundColor: "#D6C3A5",
+            stack: "money",
+        },
+        {
+            label: "これまでに育った分",
+            data: pastGains,
+            backgroundColor: "#BFD8C7",
+            stack: "money",
+        },
+        {
+            label: "今年育った分",
+            data: yealyGains,
+            backgroundColor: "#F7E7A5",
+            stack: "money"
+        }]
+    };
+
+    const config = {
+        type: 'bar',
+        data: data,
+        options: {
+            scales: {
+                x: {
+                    stacked: true,
+                    title: {
+                        display: true,
+                        text: "育てた年数（年）",
+                        color: "#6B4E3D",
+                        font: {
+                            size: 14,
+                            weight: "bold",
+                        },
+                    },
+                },
+                y: {
+                    stacked: true,
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: "資産額（円）",
+                        color: "#6B4E3D",
+                        font: {
+                            size: 14,
+                            weight: "bold",
+                        },
+                    },
+                    grid: {
+                        color: "#EAF4FB"
+                    }
+                }
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        title: function (contexts) {
+                            return `${contexts[0].label}年目`;
+                        },
+                        label: function (context) {
+                            const value = context.parsed.y;
+                            const datasetIndex = context.datasetIndex;
+
+                            if (datasetIndex === 2) {
+                                return `今年は ${value.toLocaleString()}円育ちました！ `;
+                            }
+                            return `${context.dataset.label}：${value.toLocaleString()}円`;
+                        }
+                    }
+                }
+            }
+        },
+    };
+
+    const ctx = document.getElementById("growthChart");
+
+    if (growthChart) {
+        growthChart.destroy();
+    }
+
+    growthChart = new Chart(ctx, config);
 });
 
