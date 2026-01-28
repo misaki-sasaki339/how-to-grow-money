@@ -43,6 +43,10 @@ footer {
     opacity: 0.8;
 }
 
+p.sub-title {
+    padding: 1.4rem 0;
+}
+
 /* =================================== */
 
 /* 入力欄の設定 */
@@ -287,14 +291,112 @@ input[type="number"] {
     display: block;
 }
 
+p.graph-description {
+    margin: 2.4rem 2rem 0.8rem;
+}
+
+.result-table-toggle {
+    display: none;
+    max-width: 700px;
+    margin: 2rem auto 0;
+}
+
+.result-table-toggle.is-visible {
+    display: block;
+}
+
 table {
     border-collapse: collapse;
     border: 1px solid #4a3323;
     width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+    font-size: 0.85rem;
 }
 
-th,
+th {
+    border: 1px solid #4a3323;
+    text-align: center;
+    letter-spacing: 0.06em;
+    padding: 0.4rem 0.6rem;
+    background-color: #e6ddd3;
+    font-weight: 600;
+    border-bottom: 2px solid #5a3f2b;
+}
+
 td {
     border: 1px solid #4a3323;
     text-align: right;
+    padding: 0.4rem 0.6rem;
+    letter-spacing: 0.04em;
+}
+
+table tbody tr:nth-child(odd) {
+    background-color: #faf7f3;
+}
+
+table tbody tr:nth-child(even) {
+    background-color: #f3ede6;
+}
+
+.result-table-toggle .table-section {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.4s ease, opacity 0.3s ease;
+}
+
+.result-table-toggle summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: #4b6b52;
+    list-style: none;
+    margin-bottom: 1rem;
+}
+
+.result-table-toggle summary::marker {
+    display: none;
+}
+
+.result-table-toggle summary::before {
+    content: "▶ ";
+}
+
+.result-table-toggle[open] summary::before {
+    content: "▼ ";
+}
+
+.result-table-toggle[open] .table-section {
+    max-height: 1000px;
+    opacity: 1;
+}
+
+/* =================================== */
+.loading {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    margin: 2rem 0;
+    color: #6b8f71;
+    font-weight: 600;
+}
+
+.loading.is-visible {
+    display: flex;
+}
+
+.spinner {
+    width: 32px;
+    height: 32px;
+    border: 4px solid #e1e6e2;
+    border-top: 4px solid #6b8f71;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 0.5rem;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
 }

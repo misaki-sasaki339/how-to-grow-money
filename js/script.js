@@ -60,6 +60,11 @@ function closeModal() {
     mask.animate(hideKeyframes, animationOptions);
 }
 
+// ローディングの非表示
+function hideLoading() {
+    loading.classList.remove("is-visible");
+}
+
 // イベント登録
 openBtn.addEventListener("click", openModal);
 closeBtn.addEventListener("click", closeModal);
@@ -133,176 +138,205 @@ setupRatePeriodControls(ratePeriodSection);
 const calculateBtn = document.querySelector(".calcurate-btn");
 
 const resultSection = document.querySelector('.result-section');
+const resultTableToggle = document.querySelector(".result-table-toggle")
 
 calculateBtn.addEventListener("click", () => {
     const seed = Number(seedInput.value.replace(/,/g, ""));
 
-    // =====================================
-    // 最初の育てる期間（モーダル外）
-    // =====================================
-    const baseGroup = document.querySelector(".input-section > .rate-period-section .rate-period-group");
-    const baseRate = Number(baseGroup.querySelector(".input-rate").value);
-    const baseYears = Number(baseGroup.querySelector(".input-years").value);
+    const loading = document.getElementById("loading");
+    const calculateBtn = document.querySelector(".calcurate-btn");
 
-    // バリデーション
-    if (!seed || seed <= 0) {
-        alert("はじめのたねを入力してください");
-        return;
-    }
+    loading.classList.add("is-visible");
+    setTimeout(() => {
+        // =====================================
+        // 最初の育てる期間（モーダル外）
+        // =====================================
+        const baseGroup = document.querySelector(".input-section > .rate-period-section .rate-period-group");
+        const baseRate = Number(baseGroup.querySelector(".input-rate").value);
+        const baseYears = Number(baseGroup.querySelector(".input-years").value);
 
-    if (!baseRate || !baseYears) {
-        alert("最初の育てる期間を入力してください");
-        return;
-    }
-
-    // =====================================
-    // 追加の育てる期間（モーダル内）
-    // =====================================
-    // 配列の最初に最初の育てる期間を入れる
-    const conditions = [];
-    conditions.push({
-        rate: baseRate/100,
-        years: baseYears
-    });
-
-    // モーダル内の期間を入れる
-    const modalGroups = document.querySelectorAll('#modal .rate-period-group');
-
-    modalGroups.forEach(group => {
-        const rate = Number(group.querySelector('.input-rate')?.value);
-        const years = Number(group.querySelector('.input-years')?.value);
-
-        if (!rate || !years) return;
-
-        conditions.push({
-            rate: rate/100,
-            years
-        });
-    })
-
-    // =====================================
-    // 複利計算ロジック
-    // =====================================
-    let currentAmount = seed;
-    let yearCount = 0;
-    const yearlyResults = [];
-
-    conditions.forEach(condition => {
-        for (let i = 0; i < condition.years; i++) {
-            const before = currentAmount;
-            currentAmount *= (1 + condition.rate);
-            yearCount++;
-
-            yearlyResults.push({
-                year: yearCount,
-                total: Math.round(currentAmount),
-                increase: Math.round(currentAmount - before)
-            });
+        // バリデーション
+        if (!seed || seed <= 0) {
+            hideLoading();
+            alert("はじめのたねを入力してください");
+            return;
         }
-    });
 
-    console.log(yearlyResults);
+        if (!baseRate || !baseYears) {
+            hideLoading();
+            alert("最初の育てる期間を入力してください");
+            return;
+        }
 
-    resultSection.classList.add("is-visible");
-    resultSection.scrollIntoView({ behavior: "smooth" });
+        // =====================================
+        // 追加の育てる期間（モーダル内）
+        // =====================================
+        // 配列の最初に最初の育てる期間を入れる
+        const conditions = [];
+        conditions.push({
+            rate: baseRate/100,
+            years: baseYears
+        });
 
-    // =====================================
-    // 資産の合計・増減率を描画
-    // =====================================
-    const labels = yearlyResults.map(r => r.year);
-    const seeds = yearlyResults.map(() => seed);
+        // モーダル内の期間を入れる
+        const modalGroups = document.querySelectorAll('#modal .rate-period-group');
 
-    // 去年までの累計増加分
-    const pastGains = yearlyResults.map(r => {
-        return r.total - seed - r.increase
-    });
+        modalGroups.forEach(group => {
+            const rate = Number(group.querySelector('.input-rate')?.value);
+            const years = Number(group.querySelector('.input-years')?.value);
 
-    // 今年の増加分
-    const yealyGains = yearlyResults.map(r => r.increase);
+            if (!rate || !years) return;
 
-    const data = {
-        labels,
-        datasets: [{
-            label: "はじまりのたね",
-            data: seeds,
-            backgroundColor: "#D6C3A5",
-            stack: "money",
-        },
-        {
-            label: "これまでに育った分",
-            data: pastGains,
-            backgroundColor: "#BFD8C7",
-            stack: "money",
-        },
-        {
-            label: "今年育った分",
-            data: yealyGains,
-            backgroundColor: "#F7E7A5",
-            stack: "money"
-        }]
-    };
+            conditions.push({
+                rate: rate/100,
+                years
+            });
+        })
 
-    const config = {
-        type: 'bar',
-        data: data,
-        options: {
-            scales: {
-                x: {
-                    stacked: true,
-                    title: {
-                        display: true,
-                        text: "育てた年数（年）",
-                        color: "#6B4E3D",
-                        font: {
-                            size: 14,
-                            weight: "bold",
-                        },
-                    },
-                },
-                y: {
-                    stacked: true,
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: "資産額（円）",
-                        color: "#6B4E3D",
-                        font: {
-                            size: 14,
-                            weight: "bold",
-                        },
-                    },
-                    grid: {
-                        color: "#EAF4FB"
-                    }
-                }
+        // =====================================
+        // 複利計算ロジック
+        // =====================================
+        let currentAmount = seed;
+        let yearCount = 0;
+        const yearlyResults = [];
+
+        conditions.forEach(condition => {
+            for (let i = 0; i < condition.years; i++) {
+                const before = currentAmount;
+                currentAmount *= (1 + condition.rate);
+                yearCount++;
+
+                yearlyResults.push({
+                    year: yearCount,
+                    total: Math.round(currentAmount),
+                    increase: Math.round(currentAmount - before)
+                });
+            }
+        });
+
+        resultSection.classList.add("is-visible");
+        resultTableToggle.classList.add("is-visible");
+        resultSection.scrollIntoView({ behavior: "smooth" });
+
+        // =====================================
+        // 資産の合計・増減をchart.jsで描画
+        // =====================================
+        const labels = yearlyResults.map(r => r.year);
+        const seeds = yearlyResults.map(() => seed);
+
+        // 去年までの累計増加分
+        const pastGains = yearlyResults.map(r => {
+            return r.total - seed - r.increase
+        });
+
+        // 今年の増加分
+        const yealyGains = yearlyResults.map(r => r.increase);
+
+        const data = {
+            labels,
+            datasets: [{
+                label: "はじまりのたね",
+                data: seeds,
+                backgroundColor: "#D6C3A5",
+                stack: "money",
             },
-            plugins: {
-                tooltip: {
-                    callbacks: {
-                        title: function (contexts) {
-                            return `${contexts[0].label}年目`;
-                        },
-                        label: function (context) {
-                            const value = context.parsed.y;
-                            const datasetIndex = context.datasetIndex;
+            {
+                label: "これまでに育った分",
+                data: pastGains,
+                backgroundColor: "#BFD8C7",
+                stack: "money",
+            },
+            {
+                label: "今年育った分",
+                data: yealyGains,
+                backgroundColor: "#F7E7A5",
+                stack: "money"
+            }]
+        };
 
-                            if (datasetIndex === 2) {
-                                return `今年は ${value.toLocaleString()}円育ちました！ `;
+        const config = {
+            type: 'bar',
+            data: data,
+            options: {
+                scales: {
+                    x: {
+                        stacked: true,
+                        title: {
+                            display: true,
+                            text: "育てた年数（年）",
+                            color: "#6B4E3D",
+                            font: {
+                                size: 14,
+                                weight: "bold",
+                            },
+                        },
+                    },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: "資産額（円）",
+                            color: "#6B4E3D",
+                            font: {
+                                size: 14,
+                                weight: "bold",
+                            },
+                        },
+                        grid: {
+                            color: "#EAF4FB"
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            title: function (contexts) {
+                                return `${contexts[0].label}年目`;
+                            },
+                            label: function (context) {
+                                const value = context.parsed.y;
+                                const datasetIndex = context.datasetIndex;
+
+                                if (datasetIndex === 2) {
+                                    return `今年は ${value.toLocaleString()}円育ちました！ `;
+                                }
+                                return `${context.dataset.label}：${value.toLocaleString()}円`;
                             }
-                            return `${context.dataset.label}：${value.toLocaleString()}円`;
                         }
                     }
                 }
-            }
-        },
-    };
+            },
+        };
 
-    const ctx = document.getElementById("growthChart");
+        const ctx = document.getElementById("growthChart");
 
-    if (growthChart) {
-        growthChart.destroy();
-    }
+        if (growthChart) {
+            growthChart.destroy();
+        }
 
-    growthChart = new Chart(ctx, config);
+        growthChart = new Chart(ctx, config);
+
+        // =====================================
+        // 資産の合計・増減をテーブル表示
+        // =====================================
+        const tableBody = document.getElementById("result-table-body");
+        tableBody.innerHTML = "";
+
+        yearlyResults.forEach(result => {
+            const tr = document.createElement("tr");
+
+            tr.innerHTML = `
+            <td>${result.year}</td>
+            <td>${result.total.toLocaleString()}</td>
+            <td>${result.increase.toLocaleString()}</td>
+            `;
+
+            tableBody.appendChild(tr);
+        });
+
+        // ローディング非表示
+        loading.classList.remove("is-visible");
+    }, 600);
 });
 

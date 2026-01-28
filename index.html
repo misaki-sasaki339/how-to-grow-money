@@ -105,37 +105,41 @@
                 </div>
             </section>
             <div id="mask"></div>
-            <button class="calcurate-btn">計算する</button>
+            <div class="button-wrapper">
+                <button class="calcurate-btn">計算する</button>
+                <button class="reset-btn">リセット</button>
+            </div>
         </div>
 
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>計算中…</p>
+        </div>
         <!-- グラフ表示（chart.js） -->
         <div class="result-section">
             <div class="graph-section">
-                <p class="graph-description">いくら育つか、見てみよう</p>
+                <p class="graph-description">成長の過程をのぞいてみよう</p>
                 <canvas id="growthChart"></canvas>
             </div>
 
             <!-- テーブル表示 -->
-            <div class="table-section">
-                <p class="table-desctiption">各年ごとに、資産がどれくらい増えていくかを見てみよう</p>
-                <table>
-                    <tr>
-                        <th>何年目</th>
-                        <th>いまの資産(円)</th>
-                        <th>ことし育ったおかね(円)</th>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>101,000</td>
-                        <td>1,000</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>202,000</td>
-                        <td>2,000</td>
-                    </tr>
-                </table>
-            </div>
+            <details class="result-table-toggle">
+                <summary class="table-desctiption">各年ごとに、おかねがどれくらい育つか詳しくみてみる</summary>
+                <div class="table-section">
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>育てる年数</th>
+                                    <th>いまの資産(円)</th>
+                                    <th>今年育ったおかね(円)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="result-table-body"></tbody>
+                        </table>
+                    </div>
+                </div> 
+            </details>
         </div>
     </main>
 
