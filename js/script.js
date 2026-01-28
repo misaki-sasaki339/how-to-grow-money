@@ -1,5 +1,5 @@
 const seedInput = document.querySelector(".input-seed");
-    // はじめのたね金額入力時にカンマ
+// はじめのたね金額入力時にカンマ
 seedInput.addEventListener("input", (e) => {
     let value = e.target.value;
 
@@ -15,6 +15,17 @@ seedInput.addEventListener("input", (e) => {
 
     e.target.value = number.toLocaleString();
 });
+
+// バリデーション
+function showError(el, message) {
+    el.textContent = message;
+    el.classList.add("is-visible");
+}
+
+function clearError(el) {
+    el.textContent = "";
+    el.classList.remove("is-visible");
+}
 
 let growthChart = null;
 
@@ -67,7 +78,6 @@ function hideLoading() {
 
 // イベント登録
 openBtn.addEventListener("click", openModal);
-closeBtn.addEventListener("click", closeModal);
 mask.addEventListener("click", closeModal);
 
 //======================
@@ -132,6 +142,36 @@ function setupRatePeriodControls(container) {
 // モーダル内のrate-period-sectionにだけ適用
 setupRatePeriodControls(ratePeriodSection);
 
+// モーダル内のバリデーション
+closeBtn.addEventListener("click", () => {
+    let hasModalError = false;
+
+    const modalGroups = document.querySelectorAll("#modal .rate-period-group");
+
+    modalGroups.forEach(group => {
+        const rate = group.querySelector(".input-rate").value.trim();
+        const years = group.querySelector(".input-years").value.trim();
+
+        // 両方空欄はOK
+        if (!rate && !years) {
+            return;
+        }
+        // 片方のみ入力時はエラー
+        if (!rate || !years) {
+            hasModalError = true;
+        }
+    });
+    const modalFormError = document.getElementById("modal-form-error");
+    if (hasModalError) {
+        showError(
+        modalFormError,
+        "未入力の項目があります。すべて入力してください。"
+        );
+    return;
+    }
+    closeModal();
+})
+
 //======================
 // 複利計算ロジック
 //======================
@@ -144,7 +184,12 @@ calculateBtn.addEventListener("click", () => {
     const seed = Number(seedInput.value.replace(/,/g, ""));
 
     const loading = document.getElementById("loading");
-    const calculateBtn = document.querySelector(".calcurate-btn");
+    const seedError = document.getElementById("seed-error");
+    const baseRateError = document.getElementById("base-rate-error");
+    const baseYearsError = document.getElementById("base-years-error");
+
+
+    let hasError = false;
 
     loading.classList.add("is-visible");
     setTimeout(() => {
@@ -158,13 +203,30 @@ calculateBtn.addEventListener("click", () => {
         // バリデーション
         if (!seed || seed <= 0) {
             hideLoading();
-            alert("はじめのたねを入力してください");
-            return;
+            showError(seedError, "1以上の数字を入力してください");
+            hasError = true;
+        } else {
+            clearError(seedError);
         }
 
-        if (!baseRate || !baseYears) {
+        if (!baseRate) {
             hideLoading();
-            alert("最初の育てる期間を入力してください");
+            showError(baseRateError, "利回りを入力してください");
+            hasError = true;
+        } else {
+            clearError(baseRateError);
+        }
+
+        if (!baseYears) {
+            hideLoading();
+            showError(baseYearsError, "期間を入力してください");
+            hasError = true;
+        } else {
+            clearError(baseYearsError)
+        }
+
+        if (hasError) {
+            loading.classList.remove("is-visible");
             return;
         }
 
@@ -340,3 +402,61 @@ calculateBtn.addEventListener("click", () => {
     }, 600);
 });
 
+//======================
+// 入力内容のリセット
+//======================
+const resetBtn = document.querySelector(".reset-btn");
+resetBtn.addEventListener('click', () => {
+    // 入力値のリセット
+    document.querySelectorAll("input").forEach(input => input.value = "");
+
+    //エラーの非表示
+    document.querySelectorAll(".error-message").forEach(err => {
+        err.textContent = "";
+        err.classList.remove("is-visible");
+    });
+
+    // グラフの破棄
+    if (growthChart) {
+        growthChart.destroy();
+        growthChart = null;
+    }
+
+    // テーブルの削除
+    document.getElementById("result-table-body").innerHTML = "";
+
+    // 結果非表示
+    resultSection.classList.remove("is-visible");
+    resultTableToggle.classList.remove("is-visible");
+
+    // ローディングの削除
+    loading.classList.remove("is-visible");
+
+    //======================
+    // 入力内容のリセット
+    //======================
+    // 入力内容のクリア
+    document.querySelectorAll("#modal input").forEach(input => {
+        input.value = "";
+    });
+
+    // エラー文のクリア
+    document.querySelectorAll("#modal .error-message, #modal .form-error").forEach(err => {
+        err.textContent = "",
+        err.classList.remove("is-visible");
+    });
+
+    // 追加されたブロックを初期状態に戻す
+    const modalSection = document.querySelector("#modal .rate-period-section");
+    const modalGroups = modalSection.querySelectorAll(".rate-period-group");
+
+    modalGroups.forEach((group, index) => {
+        if (index !== 0) {
+            group.remove();
+        }
+    });
+
+    // タイトル番号と＋ボタン状態を初期状態に戻す
+    updateConditionTitles(modalSection);
+    toggleAddButtons(modalSection);
+});

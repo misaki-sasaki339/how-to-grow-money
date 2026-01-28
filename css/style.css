@@ -47,6 +47,46 @@ p.sub-title {
     padding: 1.4rem 0;
 }
 
+/* エラーメッセージ */
+.error-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.error-message {
+    position: absolute;
+    top: 12%;
+    left: calc(100% + 8px);
+    transform: translateY(-50%);
+
+    background: #fff;
+    color: #c0392b;
+    border: 1px solid #e0b4b4;
+    border-radius: 4px;
+    padding: 0.3rem 0.5rem;
+    font-size: 0.75rem;
+    white-space: nowrap;
+
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    display: none;
+    z-index: 10;
+}
+
+.error-message::before {
+    content: "";
+    position: absolute;
+    left: -12px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: transparent #e0b4b4 transparent transparent;
+}
+
+.error-message.is-visible {
+    display: block;
+}
+
 /* =================================== */
 
 /* 入力欄の設定 */
@@ -67,6 +107,13 @@ p.sub-title {
     margin-bottom: 1.25rem;
 }
 
+.input-group__field {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: 1;
+}
+
 .rate-period-group {
     display: flex;
     flex-direction: column;
@@ -84,7 +131,7 @@ p.sub-title {
 .input-label {
     display: flex;
     flex-direction: column;
-    gap: 0.15rem;
+    gap: 0.4rem;
 }
 
 .input-group input {
@@ -122,6 +169,13 @@ p.sub-title {
     pointer-events: none;
 }
 
+.button-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    margin-top: 1.5rem;
+}
+
 .calcurate-btn {
     font-weight: bold;
     background-color: #5a3f2b;
@@ -130,6 +184,17 @@ p.sub-title {
     border-radius: 3px;
     text-align: center;
     padding: 0.6rem 1.4rem;
+}
+
+.reset-btn {
+    position: absolute;
+    right: 0;
+    background: transparent;
+    border: 1px solid #ccc;
+    color: #555;
+    padding: 0.5rem 1.2rem;
+    border-radius: 20px;
+    cursor: pointer;
 }
 
 /* =================================== */
@@ -158,7 +223,6 @@ p.sub-title {
     align-self: flex-end;
     padding: 0.6rem 1.2rem;
     font-size: 0.85rem;
-    margin: 1.25rem 0;
 }
 
 #mask {
@@ -213,6 +277,7 @@ p.sub-title {
     display: flex;
     align-items: center;
     gap: 0.75rem;
+
 }
 
 .modal-body {
@@ -278,6 +343,14 @@ input[type="number"]::-webkit-outer-spin-button {
 
 input[type="number"] {
     -moz-appearance: textfield;
+}
+
+p#modal-form-error {
+    text-align: center;
+    color: #c0392b;
+    margin: 0.8rem 0;
+    font-size: 0.8rem;
+    font-weight: bold;
 }
 
 /* =================================== */
